@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Janus&#39;s Blog</title>
+  <subtitle>Free to look around</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://januszhou.com/"/>
+  <updated>2017-03-21T01:05:39.000Z</updated>
+  <id>http://januszhou.com/</id>
+  
+  <author>
+    <name>Janus Zhou</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Prevent HTML5 Video Seeking</title>
+    <link href="http://januszhou.com/2017/03/21/Prevent-HTML5-Video-Seeking/"/>
+    <id>http://januszhou.com/2017/03/21/Prevent-HTML5-Video-Seeking/</id>
+    <published>2017-03-21T00:31:01.000Z</published>
+    <updated>2017-03-21T01:05:39.000Z</updated>
+    
+    <content type="html"><![CDATA[
+<h2 id="">
+    <a href="#Why-I-created-this-tool" class="headerlink" title="Why I created this tool"></a>
+    Problem on IOS
+</h2>
+<p>
+    If you don't want user skip part of video, on HTML web page, you probably want disable controls on Video tag. However, on IOS, even you disable it, QuickPlay will still shows progress bar. Following code demonstrate how to do it.
+</p>
+<a id="more"></a>
+
+
+<h3>HTML</h3>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;video id=&quot;video&quot; controls autoplay muted&gt;</div><div class="line">  &lt;source src=&quot;https://vjs.zencdn.net/v/oceans.mp4&quot; type=&quot;video/mp4&quot;&gt;</div><div class="line">&lt;/video&gt;</div></pre></td></tr></table></figure>
+
+<h3>JS</h3>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">var video = document.getElementById(&apos;video&apos;);</div><div class="line">var supposedCurrentTime = 0;</div><div class="line">video.addEventListener(&apos;timeupdate&apos;, function() &#123;</div><div class="line">  if (!video.seeking) &#123;</div><div class="line">		supposedCurrentTime = video.currentTime;</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// prevent user from seeking</div><div class="line">video.addEventListener(&apos;seeking&apos;, function() &#123;</div><div class="line">  // guard agains infinite recursion:</div><div class="line">  // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....</div><div class="line">  var delta = video.currentTime - supposedCurrentTime;</div><div class="line">  // delta = Math.abs(delta); // disable seeking previous content if you want</div><div class="line">  if (delta &gt; 0.01) &#123;</div><div class="line">    video.currentTime = supposedCurrentTime;</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">video.addEventListener(&apos;ended&apos;, function() &#123;</div><div class="line">  // reset state in order to allow for rewind</div><div class="line">	supposedCurrentTime = 0;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+<div class="row">
+  <div class="col-sm-12">
+    <video id="video" class="center-block" controls autoplay muted>
+      <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var video = document.getElementById('video');
+  var supposedCurrentTime = 0;
+  var maxProgressTime = 0;
+  video.addEventListener('timeupdate', function() {
+    if (!video.seeking) {
+      if(video.currentTime > maxProgressTime){
+        maxProgressTime = video.currentTime;
+      }
+
+      supposedCurrentTime = video.currentTime;
+    }
+  });
+  // prevent user from seeking
+  video.addEventListener('seeking', function() {
+    // console.log('Current time', video.currentTime );
+    // guard agains infinite recursion:
+    // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+    var delta = video.currentTime - supposedCurrentTime;
+    // if (delta > 0.01 || video.currentTime >= maxProgressTime) {
+    //   // console.log("Seeking is disabled");
+    //
+    //   if(video.currentTime >= maxProgressTime){
+    //     video.currentTime = maxProgressTime;
+    //   } else {
+    //     video.currentTime = supposedCurrentTime;
+    //   }
+    // }
+
+    if (delta > 0.01) {
+      // console.log("Seeking is disabled");
+      video.currentTime = supposedCurrentTime;
+    }
+  });
+  // delete the following event handler if rewind is not required
+  video.addEventListener('ended', function() {
+    // reset state in order to allow for rewind
+    // supposedCurrentTime = 0;
+  });
+</script>
+]]></content>
+    
+    <summary type="html">
+    
+      
+&lt;h2 id=&quot;&quot;&gt;
+    &lt;a href=&quot;#Why-I-created-this-tool&quot; class=&quot;headerlink&quot; title=&quot;Why I created this tool&quot;&gt;&lt;/a&gt;
+    Problem on IOS
+&lt;/h2&gt;
+&lt;p&gt;
+    
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SSH Auto</title>
+    <link href="http://januszhou.com/2017/03/11/SSH-Auto-List/"/>
+    <id>http://januszhou.com/2017/03/11/SSH-Auto-List/</id>
+    <published>2017-03-11T22:52:58.000Z</published>
+    <updated>2017-03-11T23:13:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Pick-SSH-from-your-list"><a href="#Pick-SSH-from-your-list" class="headerlink" title="Pick SSH from your list"></a>Pick SSH from your list</h2><p>Check out my repository, <a href="https://github.com/januszhou/ssh-auto" target="_blank" rel="external">ssh-auto</a></p>
+<p><img src="http://i.giphy.com/l0Iy2kob2gyllHGak.gif" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Pick-SSH-from-your-list&quot;&gt;&lt;a href=&quot;#Pick-SSH-from-your-list&quot; class=&quot;headerlink&quot; title=&quot;Pick SSH from your list&quot;&gt;&lt;/a&gt;Pick SSH from you
+    
+    </summary>
+    
+    
+      <category term="SSH" scheme="http://januszhou.com/tags/SSH/"/>
+    
+      <category term="VIM" scheme="http://januszhou.com/tags/VIM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Wget &amp; SFTP Examples</title>
+    <link href="http://januszhou.com/2017/03/01/WGET-SFTP-example/"/>
+    <id>http://januszhou.com/2017/03/01/WGET-SFTP-example/</id>
+    <published>2017-03-01T22:57:47.000Z</published>
+    <updated>2017-03-11T23:13:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Story"><a href="#Story" class="headerlink" title="Story"></a>Story</h2><p>My company needs grab files from 3rd party servers daily and only today’s file. Here are useful snippets of FTP and SFTP.</p>
+<h2 id="Wget-From-FTP"><a href="#Wget-From-FTP" class="headerlink" title="Wget From FTP"></a>Wget From FTP</h2><p>If you need <code>wget</code> download specific file from another server, there is accept list argument <code>-A</code> that helps us filter today’s file.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">today=$(date +&quot;%Y-%m-%d&quot;)</div><div class="line">wget --user=&apos;ROOT&apos; --password=&apos;PWD&apos; -r --no-parent -A &quot;File $today*&quot; ftp://ftp.server.com/ -O ./destination.csv</div></pre></td></tr></table></figure>
+<h2 id="SFTP"><a href="#SFTP" class="headerlink" title="SFTP"></a>SFTP</h2><p>For SFTP, once you have public key installed on their server, you can do the following<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">today=$(date +&quot;%Y-%m-%d&quot;)</div><div class="line">sftp name@server.com &lt;&lt;EOF</div><div class="line">get *$today* destination.csv // name the file as destination.csv</div><div class="line">quit</div><div class="line">EOF</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Story&quot;&gt;&lt;a href=&quot;#Story&quot; class=&quot;headerlink&quot; title=&quot;Story&quot;&gt;&lt;/a&gt;Story&lt;/h2&gt;&lt;p&gt;My company needs grab files from 3rd party servers daily a
+    
+    </summary>
+    
+    
+      <category term="WGET" scheme="http://januszhou.com/tags/WGET/"/>
+    
+      <category term="SFTP" scheme="http://januszhou.com/tags/SFTP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CasperJS and Parallel</title>
+    <link href="http://januszhou.com/2017/02/11/CasperJS-and-Parallel/"/>
+    <id>http://januszhou.com/2017/02/11/CasperJS-and-Parallel/</id>
+    <published>2017-02-11T20:50:24.000Z</published>
+    <updated>2017-03-11T22:36:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Trouble-on-CasperJS"><a href="#Trouble-on-CasperJS" class="headerlink" title="Trouble on CasperJS"></a>Trouble on CasperJS</h2><p>One of the project we need use <a href="casperjs.org">CasperJS</a> to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?! <a id="more"></a></p>
+<p>Unfortunately, even we tried our best to optimize the page loading performance, the whole process is take around one hour. We tried initialize multiple instances of CasperJS and running those at same time, but it still failed. </p>
+<p>However, we found this <a href="http://g-liu.com/blog/2016/10/tutorial-parallel-web-scraping-with-casperjs-and-gnu-parallel/" target="_blank" rel="external">blog</a>, by utilizing Parallel, program ables to process CasperJS under multiple threads simultaneously, the following steps similar to that blog except I will list installation parts.</p>
+<h2 id="Check-CPU-cores"><a href="#Check-CPU-cores" class="headerlink" title="Check CPU cores"></a>Check CPU cores</h2><p>Make sure your server has more than 1 core…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Mac: # sysctl -n hw.ncpu</div><div class="line">Linux: # nproc</div></pre></td></tr></table></figure>
+<h2 id="Install-CasperJS"><a href="#Install-CasperJS" class="headerlink" title="Install CasperJS"></a>Install CasperJS</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// install phantoms 2.1.1</div><div class="line"># wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2</div><div class="line"># tar xvf phantomjs-2.1.1-linux-x86_64.tar.bz2</div><div class="line"># cp phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin</div><div class="line"># phantomjs -v</div><div class="line"># 2.1.1</div><div class="line"># npm install -g casperjs</div></pre></td></tr></table></figure>
+<h2 id="Install-Parallel"><a href="#Install-Parallel" class="headerlink" title="Install Parallel"></a>Install Parallel</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /etc/yum.repos.d/</div><div class="line">wget http://download.opensuse.org/repositories/home:/tange/CentOS_CentOS-6/home:tange.repo</div><div class="line">yum install parallel</div></pre></td></tr></table></figure>
+<h2 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h2><p>Imagine you will need a list URLs like below and named as <code>list.txt</code>, or generate it by yourself.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">https://google.com</div><div class="line">https://yahoo.com</div><div class="line">https://facebook.com</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>Then you can use the following command to process those URLs simultaneously.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">parallel --bar -a list.txt casperjs process.js</div></pre></td></tr></table></figure>
+<h2 id="HTTP-Redirect"><a href="#HTTP-Redirect" class="headerlink" title="HTTP Redirect"></a>HTTP Redirect</h2><p>If the URL is being forced redirect from http to https, you probably will get redirect and won’t get anything, in this case, add <code>--ignore-ssl-errors=true --ssl-protocol=any</code> to your command.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Trouble-on-CasperJS&quot;&gt;&lt;a href=&quot;#Trouble-on-CasperJS&quot; class=&quot;headerlink&quot; title=&quot;Trouble on CasperJS&quot;&gt;&lt;/a&gt;Trouble on CasperJS&lt;/h2&gt;&lt;p&gt;One of the project we need use &lt;a href=&quot;casperjs.org&quot;&gt;CasperJS&lt;/a&gt; to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?!
+    
+    </summary>
+    
+    
+      <category term="CasperJS" scheme="http://januszhou.com/tags/CasperJS/"/>
+    
+      <category term="Parallel" scheme="http://januszhou.com/tags/Parallel/"/>
+    
+      <category term="PhantomJS" scheme="http://januszhou.com/tags/PhantomJS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Apache SSH</title>
+    <link href="http://januszhou.com/2017/01/21/Apache-SSH/"/>
+    <id>http://januszhou.com/2017/01/21/Apache-SSH/</id>
+    <published>2017-01-21T22:22:12.000Z</published>
+    <updated>2017-03-11T23:13:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Test-SSH-under-Apache-role"><a href="#Test-SSH-under-Apache-role" class="headerlink" title="Test SSH under Apache role"></a>Test SSH under Apache role</h2><p>If you need PHP to process bash script, and it need SSH to another server process something else. Example PHP snippet: <code>$bash = shell_exec(&#39;bash ./example.sh&#39;);</code>.</p>
+<p>Because PHP running under Apache, so Apache needs SSH to correct server. However, Ubuntu prevent <code>su apache</code> for obvious security reason, but you still able to change it.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/passwd</div></pre></td></tr></table></figure></p>
+<p>After find role Apache, change <code>/sbin/nologin</code> to <code>/bin/login</code>. Now you can do <code>su apache</code>.</p>
+<p>Under Apache role, test your SSH host, you need add host to your trust list for first time. You probably want create <code>ssh_config</code> file under <code>/var/www/</code>.</p>
+<p>Don’t forget update Apache to <code>/sbin/nologin</code> after it.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Test-SSH-under-Apache-role&quot;&gt;&lt;a href=&quot;#Test-SSH-under-Apache-role&quot; class=&quot;headerlink&quot; title=&quot;Test SSH under Apache role&quot;&gt;&lt;/a&gt;Test SSH
+    
+    </summary>
+    
+    
+      <category term="SSH" scheme="http://januszhou.com/tags/SSH/"/>
+    
+      <category term="PHP" scheme="http://januszhou.com/tags/PHP/"/>
+    
+      <category term="Apache" scheme="http://januszhou.com/tags/Apache/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PHP &amp; MSSQL</title>
+    <link href="http://januszhou.com/2016/12/11/PHP-MSSQL/"/>
+    <id>http://januszhou.com/2016/12/11/PHP-MSSQL/</id>
+    <published>2016-12-11T22:11:07.000Z</published>
+    <updated>2017-03-11T23:17:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Using-MSSQL-On-PHP7"><a href="#Using-MSSQL-On-PHP7" class="headerlink" title="Using MSSQL On PHP7"></a>Using MSSQL On PHP7</h2><p>Recently, one of my clients needs pull data from one of his new provider, unexpectedly, this new provider use MSSQL, however, we upgraded from php5.6 to php7, the old <code>mssql_connect</code> function is being removed at php7, read more <a href="http://php.net/manual/en/function.mssql-connect.php" target="_blank" rel="external">here</a>, we need another solution for it.<br> <a id="more"></a></p>
+<h3 id="Sybase"><a href="#Sybase" class="headerlink" title="Sybase"></a>Sybase</h3><p>The solution is using PDO to handle connection, but before it, we need install Sybase dependency. Below is working perfectly fine with Ubuntu 14.04.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install php7.0-sybase</div></pre></td></tr></table></figure></p>
+<h3 id="PDO"><a href="#PDO" class="headerlink" title="PDO"></a>PDO</h3><p>After it installed correctly, you can use the code below to connect with MSSQL<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$myServer = &quot;xxx.xxx.xxx.xxx&quot;;</div><div class="line">$myUser = &quot;myUser&quot;;</div><div class="line">$myPass = &quot;myPass&quot;;</div><div class="line">$myDB = &quot;myDB&quot;;</div><div class="line"></div><div class="line">$dsn= &quot;dblib:host=$myServer:1433;&quot;;</div><div class="line">$mspdo = new PDO($dsn,$myUser,$myPass);</div><div class="line">$mspdo-&gt;setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);</div><div class="line">$query = &apos;SELECT * FROM &#123;your desired table&#125;&apos;;</div><div class="line">$result = $mspdo-&gt;query($query)-&gt;fetchAll(PDO::FETCH_ASSOC);</div></pre></td></tr></table></figure></p>
+<h3 id="PHP5-Sybase"><a href="#PHP5-Sybase" class="headerlink" title="PHP5 + Sybase"></a>PHP5 + Sybase</h3><p>Here is the code will works for php5, you need install <code>sudo apt-get install php5-sybase</code>, you could use the example below to handle the query. Read more <a href="http://php.net/manual/en/function.mssql-query.php" target="_blank" rel="external">here</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$dbhandle = mssql_connect($myServer, $myUser, $myPass);</div><div class="line">$query = &apos;Some Query&apos;;</div><div class="line">$result = mssql_query($query);</div><div class="line">while ($row = mssql_fetch_assoc($result)) &#123;</div><div class="line">    echo &apos;&lt;li&gt;&apos; . $row[&apos;name&apos;] . &apos; (&apos; . $row[&apos;username&apos;] . &apos;)&lt;/li&gt;&apos;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Using-MSSQL-On-PHP7&quot;&gt;&lt;a href=&quot;#Using-MSSQL-On-PHP7&quot; class=&quot;headerlink&quot; title=&quot;Using MSSQL On PHP7&quot;&gt;&lt;/a&gt;Using MSSQL On PHP7&lt;/h2&gt;&lt;p&gt;Recently, one of my clients needs pull data from one of his new provider, unexpectedly, this new provider use MSSQL, however, we upgraded from php5.6 to php7, the old &lt;code&gt;mssql_connect&lt;/code&gt; function is being removed at php7, read more &lt;a href=&quot;http://php.net/manual/en/function.mssql-connect.php&quot;&gt;here&lt;/a&gt;, we need another solution for it.&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://januszhou.com/tags/PHP/"/>
+    
+      <category term="MSSQL" scheme="http://januszhou.com/tags/MSSQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Homestead Auto Add New Site</title>
+    <link href="http://januszhou.com/2016/11/15/Homestead-add-new-site/"/>
+    <id>http://januszhou.com/2016/11/15/Homestead-add-new-site/</id>
+    <published>2016-11-15T18:11:58.000Z</published>
+    <updated>2017-03-11T23:13:37.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Add-New-Site-To-Homestead"><a href="#Add-New-Site-To-Homestead" class="headerlink" title="Add New Site To Homestead"></a>Add New Site To Homestead</h2><p>If you using <a href="https://laravel.com/docs/5.2/homestead" target="_blank" rel="external">Homestead</a> as your development environment, you should know how to add a new site manually. But I find it a little bit annoying that you have type same commands every time. I started search around and try to find any bash script can do same thing for me in one command, I found <a href="https://github.com/raffw7912/homestead-add-site" target="_blank" rel="external">this</a> in Github, someone has created nice bash script can do pretty much everything, but it really out-of-date, so I cloned the repo and update a little bit <a href="https://github.com/januszhou/homestead-add-site" target="_blank" rel="external">here</a></p>
+<h2 id="Catch"><a href="#Catch" class="headerlink" title="Catch"></a>Catch</h2><p>You need update configuration at top of bash script.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Add-New-Site-To-Homestead&quot;&gt;&lt;a href=&quot;#Add-New-Site-To-Homestead&quot; class=&quot;headerlink&quot; title=&quot;Add New Site To Homestead&quot;&gt;&lt;/a&gt;Add New Sit
+    
+    </summary>
+    
+    
+      <category term="Homestead" scheme="http://januszhou.com/tags/Homestead/"/>
+    
+      <category term="Bash" scheme="http://januszhou.com/tags/Bash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo Server Auto Restart</title>
+    <link href="http://januszhou.com/2016/10/19/auto-restart-hexo-server/"/>
+    <id>http://januszhou.com/2016/10/19/auto-restart-hexo-server/</id>
+    <published>2016-10-19T00:59:23.000Z</published>
+    <updated>2016-10-21T04:25:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Introduce-Hexo-Auto-Restart"><a href="#Introduce-Hexo-Auto-Restart" class="headerlink" title="Introduce Hexo Auto Restart"></a>Introduce Hexo Auto Restart</h2><p>Hexo is a great blog platform, the article you are looking right now is written on top of Hexo. If you tired manually to <code>Ctrl + c</code> start and restart server, you probably want two console window, one runs <code>hexo server -s</code>, <code>-s</code> means only serve static html files, which located at <code>public/</code> folder, and the other one runs <code>hexo generate --watch</code>, it’s builtin command to watch file updates and auto generate new static files. Start those two commands, refresh your browser and you should see the new updates.</p>
+<h2 id="Problem-With-Watch-in-VagrantBox"><a href="#Problem-With-Watch-in-VagrantBox" class="headerlink" title="Problem With Watch in VagrantBox"></a>Problem With Watch in VagrantBox</h2><p>I personally had pretty much all developing projects running in the vagrant box, the problem of <code>hexo generate --watch</code> seems like doesn’t corporate with vagrant box, so the <a href="https://github.com/remy/nodemon" target="_blank" rel="external">Nodemon</a> comes into the game.</p>
+<h2 id="Install-Nodemon"><a href="#Install-Nodemon" class="headerlink" title="Install Nodemon"></a>Install Nodemon</h2><p>I prefer install Nodemon globally, <code>[sudo] npm install -g nodemon</code>, but if you don’t like it, just do <code>npm install nodemon</code></p>
+<h2 id="Magic-Command"><a href="#Magic-Command" class="headerlink" title="Magic Command"></a>Magic Command</h2><p>Command: <code>nodemon -e html,md,less --ignore public/ -L --exec &#39;hexo generate&#39;</code>, The Nodemon will start watching file updates and automatically runs <code>hexo generate</code></p>
+<p>Short explanation:</p>
+<ul>
+<li><code>-e</code> is adding the specific extension to Nodemon watch list, nodemon default looks for files with <code>.js</code>, <code>.coffee</code>, <code>.litcoffee</code> and <code>.json</code>, on this example, Nodemon will watch <code>.html</code>, <code>.md</code>. Add whatever extensions you want.</li>
+<li><code>-L</code> is only required if you running your developing environment on virtual machine, such as Vagrant, VirtualBox.</li>
+<li><code>--ignore public/</code> is important, otherwise, once you generated new static files, Nodemon will detect updates in public folder and start generate again, infinite loop…</li>
+<li><code>--exec &#39;hexo generate&#39;</code> is the main command let Nodemon knows how suppose it to execute the program, inside <code>hexo server</code>, you can change it to whatever you currently using, for more information, check at <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Hexo Server</a></li>
+</ul>
+<h2 id="Finally"><a href="#Finally" class="headerlink" title="Finally"></a>Finally</h2><p>On production, you could consider to use <a href="https://github.com/foreverjs/forever" target="_blank" rel="external">forever</a> to start Hexo daemon, the command I use is<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">forever start --uid blog --append -c &apos;hexo server -s -p 80&apos; ./</div></pre></td></tr></table></figure></p>
+<p>After you get new blog and pull from upstream, run <code>hexo generate</code> and your blog should get updated.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Introduce-Hexo-Auto-Restart&quot;&gt;&lt;a href=&quot;#Introduce-Hexo-Auto-Restart&quot; class=&quot;headerlink&quot; title=&quot;Introduce Hexo Auto Restart&quot;&gt;&lt;/a&gt;Intro
+    
+    </summary>
+    
+    
+      <category term="Hexo" scheme="http://januszhou.com/tags/Hexo/"/>
+    
+      <category term="Nodemon" scheme="http://januszhou.com/tags/Nodemon/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Youtube video snapshot with play button</title>
+    <link href="http://januszhou.com/2016/10/11/youtube-snapshot-with-play-button/"/>
+    <id>http://januszhou.com/2016/10/11/youtube-snapshot-with-play-button/</id>
+    <published>2016-10-11T15:00:00.000Z</published>
+    <updated>2017-03-16T01:21:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Why-I-created-this-tool">
+    <a href="#Why-I-created-this-tool" class="headerlink" title="Why I created this tool"></a>
+    Why I created this tool
+</h2>
+<p>
+    Recently, one of my clients ask me to put their newest marketing video snapshot with play button into the new email campaign. Obviously, if I'm the designer, I would just use Photoshop to
+</p>
+<a id="more"></a>
+
+<div class="row">
+    <div class="col-sm-6"><input type="text" placeholder="Enter Youtube video link" id="youtube-link" class="form-control"></div>
+    <div class="col-sm-4"><button id="load-youtube" class="btn btn-success">Load Youtube</button></div>
+    <div class="col-sm-2" id="loader"></div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <p class="text-center">YouTube Video</p>
+        <div class="embed-responsive embed-responsive-16by9">
+            <video controls id="player1">
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <button id="snap" class="btn btn-success center-block">Take screenshot anytime you want</button>
+        <div class="embed-responsive embed-responsive-16by9">
+            <canvas></canvas>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play1" class="input-hidden">
+        <label for="play1"><img src="/images/play1.png"></label>
+    </div>
+
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play2" class="input-hidden">
+        <label for="play2"><img src="/images/play2.png"></label>
+    </div>
+
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play3" class="input-hidden">
+        <label for="play3"><img src="/images/play3.png"></label>
+    </div>
+
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play4" class="input-hidden">
+        <label for="play4"><img src="/images/play4.png"></label>
+    </div>
+
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play5" class="input-hidden">
+        <label for="play5"><img src="/images/play5.png"></label>
+    </div>
+
+    <div class="col-sm-2">
+        <input type="radio" name="play-button" id="play6" class="input-hidden">
+        <label for="play6"><img src="/images/play6.png"></label>
+    </div>
+</div>
+
+<!--<div>-->
+    <!--<input type="radio" name="play-button" value="play1.png" checked><img src="/images/play1.png">-->
+    <!--<input type="radio" name="play-button" value="play2.png"><img src="/images/play2.png">-->
+    <!--<input type="radio" name="play-button" value="play3.png"><img src="/images/play3.png">-->
+    <!--<input type="radio" name="play-button" value="play4.png"><img src="/images/play4.png">-->
+    <!--<input type="radio" name="play-button" value="play5.png"><img src="/images/play5.png">-->
+    <!--<input type="radio" name="play-button" value="play6.png"><img src="/images/play6.png">-->
+<!--</div>-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://spin.js.org/spin.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Get handles on the video and canvas elements
+        var video = document.querySelector('video');
+        video.autoplay = false;
+        var canvas = document.querySelector('canvas');
+        // Get a handle on the 2d context of the canvas element
+        var context = canvas.getContext('2d');
+        // Define some vars required later
+        var w, h, ratio;
+
+        var spinner;
+
+        function spinStart(){
+          var target = document.getElementById('loader');
+          spinner = new Spinner();
+          target.appendChild(spinner.spin().el);
+        }
+
+        function spinStop(){
+          spinner.stop();
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        /**
+         * Test case 12h34m5s, 12h77m5s, 12h34m77s, 12h34h5s, 12h34m5m, 5s, 34m5s
+         * @param  {[String]} t [description]
+         * @return {[type]}   [description]
+         */
+        function convert(t)
+        {
+            //format could be 1h2m3s
+            var results = t.split(/(h|m|s)/g);
+            var hour = minute = second = 0;
+            if(results.length == 1){
+                return 0;
+            }
+            var foundHour = foundMinute = foundSecond = 0;
+            for(var i = 0; i <= results.length - 2; i++){
+                if(results[i + 1] == 'h'){
+                    hour = parseInt(results[i]);
+                    foundHour++;
+                }
+
+                if(results[i + 1] == 'm'){
+                    minute = parseInt(results[i]);
+                    foundMinute++;
+                }
+
+                if(results[i + 1] == 's'){
+                    second = parseInt(results[i]);
+                    foundSecond++;
+                }
+
+                if(isNaN(hour) || isNaN(minute) || isNaN(second)){
+                    return 0;
+                }
+            }
+
+            if(foundHour > 1 || foundMinute > 1 || foundSecond > 1){
+                return 0;
+            }
+
+            if(minute >= 60 || second >= 60){
+                return 0;
+            }
+
+            return hour * 3600 + minute * 60 + second;
+        }
+
+        $('#load-youtube').on('click', function(){
+            spinStart();
+            var src = $('#youtube-link').val();
+            var t = getParameterByName('t', src);
+            var jump = 0;
+            if(t){
+                jump = convert(t);
+            }
+            if (src) {
+                var isYoutube = src && src.match(/(?:youtu|youtube)(?:\.com|\.be)\/([\w\W]+)/i);
+                if (isYoutube) {
+                    var id = isYoutube[1].match(/watch\?v=|[\w\W]+/gi);
+                    id = (id.length > 1) ? id.splice(1) : id;
+                    id = id.toString();
+                    var mp4url = "http://www.youtubeinmp4.com/redirect.php?video="; // if need hd, do hd=1
+                    video.src = mp4url + id;
+
+                    if(jump){
+                        video.currentTime = jump;
+                    }
+
+                    // Add a listener to wait for the 'loadedmetadata' state so the video's dimensions can be read
+                    video.addEventListener('loadedmetadata', function() {
+                        // Calculate the ratio of the video's width to height
+                        ratio = video.videoWidth / video.videoHeight;
+                        // Define the required width as 100 pixels smaller than the actual video's width
+                        w = video.videoWidth;
+                        // Calculate the height based on the video's width and the ratio
+                        h = parseInt(w / ratio, 10);
+                        // Set the canvas width and height to the values just calculated
+                        canvas.width = w;
+                        canvas.height = h;
+                        spinStop();
+                    }, false);
+
+                    setTimeout(function(){
+                      spinStop();
+                    }, 5000);
+                } else {
+                    alert('Valid youtube link please');
+                    spinStop();
+                }
+            } else {
+              spinStop();
+            }
+        });
+
+        $('#snap').on('click', function(){
+            // Define the size of the rectangle that will be filled (basically the entire element)
+            context.fillRect(0, 0, w, h);
+            // Grab the image from the video
+            context.drawImage(video, 0, 0, w, h);
+
+            var playImage = new Image();
+            playImage.src = $('input[name=play-button]:checked').parent().find('img').prop('src');
+            playImage.onload = function(){
+                var paddingX = parseInt((w - playImage.width) / 2);
+                var paddingY = parseInt((h - playImage.height) / 2);
+                context.drawImage(playImage, paddingX, paddingY);
+            }
+        })
+    })
+</script>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Why-I-created-this-tool&quot;&gt;
+    &lt;a href=&quot;#Why-I-created-this-tool&quot; class=&quot;headerlink&quot; title=&quot;Why I created this tool&quot;&gt;&lt;/a&gt;
+    Why I c
+    
+    </summary>
+    
+    
+      <category term="Youtube" scheme="http://januszhou.com/tags/Youtube/"/>
+    
+      <category term="Canvas" scheme="http://januszhou.com/tags/Canvas/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel Sever Setup On EC2</title>
+    <link href="http://januszhou.com/2016/10/04/larvel-server-setup/"/>
+    <id>http://januszhou.com/2016/10/04/larvel-server-setup/</id>
+    <published>2016-10-04T20:43:28.000Z</published>
+    <updated>2016-10-20T20:50:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Laravel-Server-Setup"><a href="#Laravel-Server-Setup" class="headerlink" title="Laravel Server Setup"></a>Laravel Server Setup</h2><p>Environment setup on EC2, Linux ubuntu 14.04 + php 5.6 + mysql 5.7 + apache 2.4</p>
+<a id="more"></a>
+<h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get -y update</div><div class="line">sudo add-apt-repository ppa:ondrej/php</div><div class="line">sudo apt-get -y update</div><div class="line">sudo apt-get -y install php5.6 php5.6-mcrypt php5.6-mbstring php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-xsl</div></pre></td></tr></table></figure>
+<h3 id="Git-amp-Zip"><a href="#Git-amp-Zip" class="headerlink" title="Git &amp; Zip"></a>Git &amp; Zip</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install zip unzip git</div></pre></td></tr></table></figure>
+<p>###Mysql 5.7<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wget http://dev.mysql.com/get/mysql-apt-config_0.6.0-1_all.deb</div><div class="line">sudo dpkg -i mysql-apt-config_0.6.0-1_all.deb</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install mysql-server mysql-client</div><div class="line">then select 5.7</div></pre></td></tr></table></figure></p>
+<p>###Redis<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository ppa:chris-lea/redis-server</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install redis-server</div></pre></td></tr></table></figure></p>
+<h3 id="Composer"><a href="#Composer" class="headerlink" title="Composer"></a>Composer</h3><p>Follow instruction on <a href="https://getcomposer.org/download/" target="_blank" rel="external">website</a>, then</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv composer.phar /usr/local/bin/composer</div></pre></td></tr></table></figure>
+<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo a2enmod rewrite</div><div class="line">sudo service apache2 restart</div></pre></td></tr></table></figure>
+<p>###Install Laravel dependencies<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">composer install</div><div class="line">chmod 777 bootstrap/cache</div><div class="line">chmod 777 -R storage</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Laravel-Server-Setup&quot;&gt;&lt;a href=&quot;#Laravel-Server-Setup&quot; class=&quot;headerlink&quot; title=&quot;Laravel Server Setup&quot;&gt;&lt;/a&gt;Laravel Server Setup&lt;/h2&gt;&lt;p&gt;Environment setup on EC2, Linux ubuntu 14.04 + php 5.6 + mysql 5.7 + apache 2.4&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="server-setup" scheme="http://januszhou.com/tags/server-setup/"/>
+    
+      <category term="EC2" scheme="http://januszhou.com/tags/EC2/"/>
+    
+      <category term="Laravel" scheme="http://januszhou.com/tags/Laravel/"/>
+    
+  </entry>
+  
+</feed>

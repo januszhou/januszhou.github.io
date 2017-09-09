@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CasperJS and Parallel | Janus&#39;s Blog | Free to look around</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="theme-color" content="#3F51B5">
+  
+  
+  <meta name="keywords" content="CasperJS,Parallel,PhantomJS">
+  <meta name="description" content="Trouble on CasperJSOne of the project we need use CasperJS to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?!">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CasperJS and Parallel">
+<meta property="og:url" content="http://januszhou.com/2017/02/11/CasperJS-and-Parallel/index.html">
+<meta property="og:site_name" content="Janus's Blog">
+<meta property="og:description" content="Trouble on CasperJSOne of the project we need use CasperJS to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?!">
+<meta property="og:updated_time" content="2017-03-11T22:36:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CasperJS and Parallel">
+<meta name="twitter:description" content="Trouble on CasperJSOne of the project we need use CasperJS to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?!">
+  
+    <link rel="alternative" href="/atom.xml" title="Janus&#39;s Blog" type="application/atom+xml">
+  
+  <meta name="summary" content="&lt;h2 id=&quot;Trouble-on-CasperJS&quot;&gt;&lt;a href=&quot;#Trouble-on-CasperJS&quot; class=&quot;headerlink&quot; title=&quot;Trouble on CasperJS&quot;&gt;&lt;/a&gt;Trouble on CasperJS&lt;/h2&gt;&lt;p&gt;One of the project we need use &lt;a href=&quot;casperjs.org&quot;&gt;CasperJS&lt;/a&gt; to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?!">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="loading" class="active"></div>
+
+  <nav id="menu" class="hide" >
+   <div class="inner flex-row-vertical">
+  <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+      <i class="icon icon-lg icon-close"></i>
+  </a>
+  <div class="brand-wrap">
+    <div class="brand">
+      <a href="/" class="avatar"><img src="/img/icon1.jpg"></a>
+      <hgroup class="introduce">
+        <h5 class="nickname">Janus Zhou</h5>
+        <a href="mailto:janus.zhou1005@gmail.com" title="janus.zhou1005@gmail.com" class="mail">janus.zhou1005@gmail.com</a>
+      </hgroup>
+    </div>
+  </div>
+  <div class="scroll-wrap flex-col">
+    <ul class="nav">
+      
+          <li class="waves-block waves-effect">
+            <a href="/"  >
+              <i class="icon icon-lg icon-home"></i>
+              Home
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/archives"  >
+              <i class="icon icon-lg icon-archives"></i>
+              Archives
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="/tags"  >
+              <i class="icon icon-lg icon-tags"></i>
+              Tags
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://github.com/januszhou" target="_blank" >
+              <i class="icon icon-lg icon-github"></i>
+              Github
+            </a>
+          </li>
+      
+          <li class="waves-block waves-effect">
+            <a href="https://www.linkedin.com/in/janus-zhou-5b560682" target="_blank" >
+              <i class="icon icon-lg icon-linkedin"></i>
+              LinkedIn
+            </a>
+          </li>
+      
+    </ul>
+
+    <footer class="footer">
+  <p><a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;vertical-align:middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAMAAABEF7i9AAAAllBMVEUAAAD///+rsapERER3d3eIiIjMzMzu7u4iIiKUmZO6v7rKzsoODg4RERFVVVUNDQ0NDg0PEA8zMzNLTEtbXltmZmZydnF9gn2AgICPkI+ZmZmqqqq7u7vFxsXIzMgNDQwZGRkgICAhISEkJSMnKCcuMC4xMzE5Ozk7PTtBQkFCQkJDQ0Nna2eGhoaHh4ezuLLGysbd3d1wVGpAAAAA4UlEQVR42q2T1xqCMAyFk7QsBQeKA9x7j/d/OSm22CpX0nzcpA1/T05aAOuBVkMAScQFHLnEwoCo2f1TnQIGoVMewjZEjVFN4GH1Ue1Cn2jWqwfsOOj6wDwGvotsl/c8lv7KIq1eLOsT0HMFHMIE/RZyHnlphryT9zyV+8WH5e8yQw3wnQvgAFxPTKUVi555SHR/lOfLMgVTeDlSfN+TaoUsiTyeIm+bCkHvCA2FUKG48LDtYBZBknsYP/G8NTw0gaaHyuQf4H5pecrB/FYCT2sL9zAfy1Xyjou6L8X2W7YcLyBZCRtnq/zfAAAAAElFTkSuQmCC" /></a></p>
+  <p>Janus&#39;s Blog &copy; 2017</p>
+  <p>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+  <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></p>
+  <a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-2x icon-rss-square"></i></a>
+</footer>
+
+  </div>
+</div>
+
+  </nav>
+  <main id="main">
+    <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CasperJS and Parallel</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input " autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-share">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header">
+  <div class="container">
+    <h1 class="author">CasperJS and Parallel</h1>
+    <h5 class="subtitle">
+        
+            <time datetime="2017-02-11T20:50:24.000Z" itemprop="datePublished" class="page-time">
+  2017-02-11
+</time>
+
+
+        
+    </h5>
+  </div>
+</header>
+
+    <div class="container body-wrap">
+      <article id="post-CasperJS-and-Parallel" 
+  class="article article-type-post" itemprop="blogPost">
+    <div class="post-meta flex-row">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CasperJS/">CasperJS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Parallel/">Parallel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PhantomJS/">PhantomJS</a></li></ul>
+
+    </div>
+    <div class="post-body">
+        <aside class="post-widget" id="post-widget">
+
+            
+            <div class="post-share" id="post-share">
+    <div class="tit">Share：</div>
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" href="javascript:;" data-title="Weibo" data-service="tsina">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns" href="javascript:;" data-title="Wechat" data-service="weixin">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="douban share-sns" href="javascript:;" data-title="Douban" data-service="douban">
+          豆
+        </a>
+      </li>
+    </ul>
+ </div>
+
+            
+
+            
+            <nav class="post-toc-wrap" id="post-toc">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Trouble-on-CasperJS"><span class="post-toc-text">Trouble on CasperJS</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Check-CPU-cores"><span class="post-toc-text">Check CPU cores</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Install-CasperJS"><span class="post-toc-text">Install CasperJS</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Install-Parallel"><span class="post-toc-text">Install Parallel</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Examples"><span class="post-toc-text">Examples</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTP-Redirect"><span class="post-toc-text">HTTP Redirect</span></a></li></ol>
+            </nav>
+            
+        </aside>
+
+        <div class="post-main">
+
+            <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Trouble-on-CasperJS"><a href="#Trouble-on-CasperJS" class="headerlink" title="Trouble on CasperJS"></a>Trouble on CasperJS</h2><p>One of the project we need use <a href="casperjs.org">CasperJS</a> to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?! <a id="more"></a></p>
+<p>Unfortunately, even we tried our best to optimize the page loading performance, the whole process is take around one hour. We tried initialize multiple instances of CasperJS and running those at same time, but it still failed. </p>
+<p>However, we found this <a href="http://g-liu.com/blog/2016/10/tutorial-parallel-web-scraping-with-casperjs-and-gnu-parallel/" target="_blank" rel="external">blog</a>, by utilizing Parallel, program ables to process CasperJS under multiple threads simultaneously, the following steps similar to that blog except I will list installation parts.</p>
+<h2 id="Check-CPU-cores"><a href="#Check-CPU-cores" class="headerlink" title="Check CPU cores"></a>Check CPU cores</h2><p>Make sure your server has more than 1 core…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Mac: # sysctl -n hw.ncpu</div><div class="line">Linux: # nproc</div></pre></td></tr></table></figure>
+<h2 id="Install-CasperJS"><a href="#Install-CasperJS" class="headerlink" title="Install CasperJS"></a>Install CasperJS</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// install phantoms 2.1.1</div><div class="line"># wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2</div><div class="line"># tar xvf phantomjs-2.1.1-linux-x86_64.tar.bz2</div><div class="line"># cp phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin</div><div class="line"># phantomjs -v</div><div class="line"># 2.1.1</div><div class="line"># npm install -g casperjs</div></pre></td></tr></table></figure>
+<h2 id="Install-Parallel"><a href="#Install-Parallel" class="headerlink" title="Install Parallel"></a>Install Parallel</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /etc/yum.repos.d/</div><div class="line">wget http://download.opensuse.org/repositories/home:/tange/CentOS_CentOS-6/home:tange.repo</div><div class="line">yum install parallel</div></pre></td></tr></table></figure>
+<h2 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h2><p>Imagine you will need a list URLs like below and named as <code>list.txt</code>, or generate it by yourself.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">https://google.com</div><div class="line">https://yahoo.com</div><div class="line">https://facebook.com</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>Then you can use the following command to process those URLs simultaneously.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">parallel --bar -a list.txt casperjs process.js</div></pre></td></tr></table></figure>
+<h2 id="HTTP-Redirect"><a href="#HTTP-Redirect" class="headerlink" title="HTTP Redirect"></a>HTTP Redirect</h2><p>If the URL is being forced redirect from http to https, you probably will get redirect and won’t get anything, in this case, add <code>--ignore-ssl-errors=true --ssl-protocol=any</code> to your command.</p>
+
+
+            
+            
+            <blockquote>
+                <p>
+                Link：
+                <a href="http://januszhou.com/2017/02/11/CasperJS-and-Parallel/" target="_blank" rel="external">http://januszhou.com/2017/02/11/CasperJS-and-Parallel/</a>
+                </p>
+                <footer><cite><a href="http://januszhou.com">@Janus's Blog</a></cite></footer>
+            </blockquote>
+            </div>
+            
+<nav class="post-nav">
+  
+    <div class="waves-block waves-effect prev fl">
+      <a href="/2017/03/01/WGET-SFTP-example/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Wget &amp; SFTP Examples</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2017/01/21/Apache-SSH/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Apache SSH</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+            
+            
+
+
+<section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'januszhou'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+        </div>
+    </div>
+</article>
+    </div>
+  </main>
+<div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+<script>
+var BLOG_SHARE = {
+    title: "CasperJS and Parallel",
+    pic: "/img/icon1.jpg",
+    summary: document.getElementsByName('summary')[0].content,
+    url: "http://januszhou.com/2017/02/11/CasperJS-and-Parallel/index.html"
+};
+</script>
+<div class="global-share" id="global-share">
+    <div class="tit">Share：</div>
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" href="javascript:;" data-title="Weibo" data-service="tsina">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns" href="javascript:;" data-title="Wechat" data-service="weixin">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" href="javascript:;" data-title=" QQ" data-service="cqq">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" href="javascript:;" data-title=" Facebook" data-service="fb">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" href="javascript:;" data-title=" Twitter" data-service="twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="douban share-sns" href="javascript:;" data-title="Douban" data-service="douban">
+          豆
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+
+<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<script type="text/template" id="search-tpl">
+<li class="item">
+    <a href="/{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</script>
+
+<script src="/js/search.js"></script>
+
+
+
+
+
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-85344115-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+</body>
+</html>
