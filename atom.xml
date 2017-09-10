@@ -4,9 +4,9 @@
   <subtitle>Free to look around</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://januszhou.com/"/>
-  <updated>2017-03-21T01:05:39.000Z</updated>
-  <id>http://januszhou.com/</id>
+  <link href="http://januszhou.tech/"/>
+  <updated>2017-04-20T15:45:30.000Z</updated>
+  <id>http://januszhou.tech/</id>
   
   <author>
     <name>Janus Zhou</name>
@@ -16,11 +16,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Cpanel Composer</title>
+    <link href="http://januszhou.tech/2017/03/23/Cpanel-Composer/"/>
+    <id>http://januszhou.tech/2017/03/23/Cpanel-Composer/</id>
+    <published>2017-03-24T02:06:39.000Z</published>
+    <updated>2017-04-20T15:45:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="cPanel-suhosin-issue"><a href="#cPanel-suhosin-issue" class="headerlink" title="cPanel suhosin issue"></a>cPanel suhosin issue</h2><p>If you use cpanel and suhosin, you might get error as</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">The suhosin.executor.include.whitelist setting is incorrect.</div><div class="line">Add the following to the end of your `php.ini` or suhosin.ini (Example path [for Debian]: /etc/php5/cli/conf.d/suhosin.ini):</div><div class="line">    suhosin.executor.include.whitelist = phar</div></pre></td></tr></table></figure>
+<p>You have two options to solve it, one is update <code>php.ini</code> file if you have the permission, the other one is add <code>-d</code> option as <code>php -d suhosin.executor.include.whitelist=phar</code> every time you need composer.</p>
+<h2 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h2><p>The following code will do the work on 2nd method<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">php -r &quot;copy(&apos;https://getcomposer.org/installer&apos;, &apos;composer-setup.php&apos;);&quot;</div><div class="line">php -r &quot;if (hash_file(&apos;SHA384&apos;, &apos;composer-setup.php&apos;) === &apos;669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410&apos;) &#123; echo &apos;Installer verified&apos;; &#125; else &#123; echo &apos;Installer corrupt&apos;; unlink(&apos;composer-setup.php&apos;); &#125; echo PHP_EOL;&quot;</div><div class="line">php -d suhosin.executor.include.whitelist=phar composer-setup.php</div><div class="line">php -r &quot;unlink(&apos;composer-setup.php&apos;);&quot;</div></pre></td></tr></table></figure></p>
+<p>Then you can start enjoy composer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">php -d suhosin.executor.include.whitelist=phar /path/to/composer.phar install</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;cPanel-suhosin-issue&quot;&gt;&lt;a href=&quot;#cPanel-suhosin-issue&quot; class=&quot;headerlink&quot; title=&quot;cPanel suhosin issue&quot;&gt;&lt;/a&gt;cPanel suhosin issue&lt;/h2&gt;&lt;
+    
+    </summary>
+    
+      <category term="cPanel" scheme="http://januszhou.tech/categories/cPanel/"/>
+    
+    
+      <category term="cPanel" scheme="http://januszhou.tech/tags/cPanel/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Prevent HTML5 Video Seeking</title>
-    <link href="http://januszhou.com/2017/03/21/Prevent-HTML5-Video-Seeking/"/>
-    <id>http://januszhou.com/2017/03/21/Prevent-HTML5-Video-Seeking/</id>
-    <published>2017-03-21T00:31:01.000Z</published>
-    <updated>2017-03-21T01:05:39.000Z</updated>
+    <link href="http://januszhou.tech/2017/03/21/Prevent-HTML5-Video-Seeking/"/>
+    <id>http://januszhou.tech/2017/03/21/Prevent-HTML5-Video-Seeking/</id>
+    <published>2017-03-21T04:31:01.000Z</published>
+    <updated>2017-04-19T22:38:36.000Z</updated>
     
     <content type="html"><![CDATA[
 <h2 id="">
@@ -28,8 +56,9 @@
     Problem on IOS
 </h2>
 <p>
-    If you don't want user skip part of video, on HTML web page, you probably want disable controls on Video tag. However, on IOS, even you disable it, QuickPlay will still shows progress bar. Following code demonstrate how to do it.
+    If you don't want user skip part of video on HTML web page, you probably want disable controls on Video tag. However, on IOS, even you disable it, QuickPlay will still shows progress bar. Following code demonstrate how to do it.
 </p>
+
 <a id="more"></a>
 
 
@@ -43,7 +72,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <video id="video" class="center-block" controls autoplay muted>
+    <video id="video" class="center-block" controls autoplay muted style="width: 100%;">
       <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
     </video>
   </div>
@@ -93,24 +122,28 @@
     
     <summary type="html">
     
-      
-&lt;h2 id=&quot;&quot;&gt;
+      &lt;h2 id=&quot;&quot;&gt;
     &lt;a href=&quot;#Why-I-created-this-tool&quot; class=&quot;headerlink&quot; title=&quot;Why I created this tool&quot;&gt;&lt;/a&gt;
     Problem on IOS
 &lt;/h2&gt;
 &lt;p&gt;
-    
+    If you don&#39;t want user skip part of video on HTML web page, you probably want disable controls on Video tag. However, on IOS, even you disable it, QuickPlay will still shows progress bar. Following code demonstrate how to do it.
+&lt;/p&gt;
     
     </summary>
     
+    
+      <category term="HTML5" scheme="http://januszhou.tech/tags/HTML5/"/>
+    
+      <category term="Video" scheme="http://januszhou.tech/tags/Video/"/>
     
   </entry>
   
   <entry>
     <title>SSH Auto</title>
-    <link href="http://januszhou.com/2017/03/11/SSH-Auto-List/"/>
-    <id>http://januszhou.com/2017/03/11/SSH-Auto-List/</id>
-    <published>2017-03-11T22:52:58.000Z</published>
+    <link href="http://januszhou.tech/2017/03/11/SSH-Auto-List/"/>
+    <id>http://januszhou.tech/2017/03/11/SSH-Auto-List/</id>
+    <published>2017-03-12T03:52:58.000Z</published>
     <updated>2017-03-11T23:13:08.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Pick-SSH-from-your-list"><a href="#Pick-SSH-from-your-list" class="headerlink" title="Pick SSH from your list"></a>Pick SSH from your list</h2><p>Check out my repository, <a href="https://github.com/januszhou/ssh-auto" target="_blank" rel="external">ssh-auto</a></p>
@@ -124,17 +157,17 @@
     </summary>
     
     
-      <category term="SSH" scheme="http://januszhou.com/tags/SSH/"/>
+      <category term="SSH" scheme="http://januszhou.tech/tags/SSH/"/>
     
-      <category term="VIM" scheme="http://januszhou.com/tags/VIM/"/>
+      <category term="VIM" scheme="http://januszhou.tech/tags/VIM/"/>
     
   </entry>
   
   <entry>
     <title>Wget &amp; SFTP Examples</title>
-    <link href="http://januszhou.com/2017/03/01/WGET-SFTP-example/"/>
-    <id>http://januszhou.com/2017/03/01/WGET-SFTP-example/</id>
-    <published>2017-03-01T22:57:47.000Z</published>
+    <link href="http://januszhou.tech/2017/03/01/WGET-SFTP-example/"/>
+    <id>http://januszhou.tech/2017/03/01/WGET-SFTP-example/</id>
+    <published>2017-03-02T03:57:47.000Z</published>
     <updated>2017-03-11T23:13:22.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Story"><a href="#Story" class="headerlink" title="Story"></a>Story</h2><p>My company needs grab files from 3rd party servers daily and only today’s file. Here are useful snippets of FTP and SFTP.</p>
@@ -150,21 +183,21 @@
     </summary>
     
     
-      <category term="WGET" scheme="http://januszhou.com/tags/WGET/"/>
+      <category term="WGET" scheme="http://januszhou.tech/tags/WGET/"/>
     
-      <category term="SFTP" scheme="http://januszhou.com/tags/SFTP/"/>
+      <category term="SFTP" scheme="http://januszhou.tech/tags/SFTP/"/>
     
   </entry>
   
   <entry>
     <title>CasperJS and Parallel</title>
-    <link href="http://januszhou.com/2017/02/11/CasperJS-and-Parallel/"/>
-    <id>http://januszhou.com/2017/02/11/CasperJS-and-Parallel/</id>
-    <published>2017-02-11T20:50:24.000Z</published>
-    <updated>2017-03-11T22:36:18.000Z</updated>
+    <link href="http://januszhou.tech/2017/02/11/CasperJS-and-Parallel/"/>
+    <id>http://januszhou.tech/2017/02/11/CasperJS-and-Parallel/</id>
+    <published>2017-02-12T01:50:24.000Z</published>
+    <updated>2017-04-19T22:31:44.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Trouble-on-CasperJS"><a href="#Trouble-on-CasperJS" class="headerlink" title="Trouble on CasperJS"></a>Trouble on CasperJS</h2><p>One of the project we need use <a href="casperjs.org">CasperJS</a> to navigates dozens URLs, evaluate hundreds lines of javascript in that page then submit the form, sounds crazy right?! <a id="more"></a></p>
-<p>Unfortunately, even we tried our best to optimize the page loading performance, the whole process is take around one hour. We tried initialize multiple instances of CasperJS and running those at same time, but it still failed. </p>
+<p>Unfortunately, even we tried our best to optimize the page loading performance, the whole process is take around one hour. We tried initialize multiple instances of CasperJS and running those at same time, but it still failed.</p>
 <p>However, we found this <a href="http://g-liu.com/blog/2016/10/tutorial-parallel-web-scraping-with-casperjs-and-gnu-parallel/" target="_blank" rel="external">blog</a>, by utilizing Parallel, program ables to process CasperJS under multiple threads simultaneously, the following steps similar to that blog except I will list installation parts.</p>
 <h2 id="Check-CPU-cores"><a href="#Check-CPU-cores" class="headerlink" title="Check CPU cores"></a>Check CPU cores</h2><p>Make sure your server has more than 1 core…</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Mac: # sysctl -n hw.ncpu</div><div class="line">Linux: # nproc</div></pre></td></tr></table></figure>
@@ -183,21 +216,23 @@
     
     </summary>
     
+      <category term="CasperJS" scheme="http://januszhou.tech/categories/CasperJS/"/>
     
-      <category term="CasperJS" scheme="http://januszhou.com/tags/CasperJS/"/>
     
-      <category term="Parallel" scheme="http://januszhou.com/tags/Parallel/"/>
+      <category term="CasperJS" scheme="http://januszhou.tech/tags/CasperJS/"/>
     
-      <category term="PhantomJS" scheme="http://januszhou.com/tags/PhantomJS/"/>
+      <category term="Parallel" scheme="http://januszhou.tech/tags/Parallel/"/>
+    
+      <category term="PhantomJS" scheme="http://januszhou.tech/tags/PhantomJS/"/>
     
   </entry>
   
   <entry>
     <title>Apache SSH</title>
-    <link href="http://januszhou.com/2017/01/21/Apache-SSH/"/>
-    <id>http://januszhou.com/2017/01/21/Apache-SSH/</id>
-    <published>2017-01-21T22:22:12.000Z</published>
-    <updated>2017-03-11T23:13:50.000Z</updated>
+    <link href="http://januszhou.tech/2017/01/21/Apache-SSH/"/>
+    <id>http://januszhou.tech/2017/01/21/Apache-SSH/</id>
+    <published>2017-01-22T03:22:12.000Z</published>
+    <updated>2017-04-19T22:31:13.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Test-SSH-under-Apache-role"><a href="#Test-SSH-under-Apache-role" class="headerlink" title="Test SSH under Apache role"></a>Test SSH under Apache role</h2><p>If you need PHP to process bash script, and it need SSH to another server process something else. Example PHP snippet: <code>$bash = shell_exec(&#39;bash ./example.sh&#39;);</code>.</p>
 <p>Because PHP running under Apache, so Apache needs SSH to correct server. However, Ubuntu prevent <code>su apache</code> for obvious security reason, but you still able to change it.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/passwd</div></pre></td></tr></table></figure></p>
@@ -212,20 +247,22 @@
     
     </summary>
     
+      <category term="Apache" scheme="http://januszhou.tech/categories/Apache/"/>
     
-      <category term="SSH" scheme="http://januszhou.com/tags/SSH/"/>
     
-      <category term="PHP" scheme="http://januszhou.com/tags/PHP/"/>
+      <category term="Apache" scheme="http://januszhou.tech/tags/Apache/"/>
     
-      <category term="Apache" scheme="http://januszhou.com/tags/Apache/"/>
+      <category term="SSH" scheme="http://januszhou.tech/tags/SSH/"/>
+    
+      <category term="PHP" scheme="http://januszhou.tech/tags/PHP/"/>
     
   </entry>
   
   <entry>
     <title>PHP &amp; MSSQL</title>
-    <link href="http://januszhou.com/2016/12/11/PHP-MSSQL/"/>
-    <id>http://januszhou.com/2016/12/11/PHP-MSSQL/</id>
-    <published>2016-12-11T22:11:07.000Z</published>
+    <link href="http://januszhou.tech/2016/12/11/PHP-MSSQL/"/>
+    <id>http://januszhou.tech/2016/12/11/PHP-MSSQL/</id>
+    <published>2016-12-12T03:11:07.000Z</published>
     <updated>2017-03-11T23:17:24.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Using-MSSQL-On-PHP7"><a href="#Using-MSSQL-On-PHP7" class="headerlink" title="Using MSSQL On PHP7"></a>Using MSSQL On PHP7</h2><p>Recently, one of my clients needs pull data from one of his new provider, unexpectedly, this new provider use MSSQL, however, we upgraded from php5.6 to php7, the old <code>mssql_connect</code> function is being removed at php7, read more <a href="http://php.net/manual/en/function.mssql-connect.php" target="_blank" rel="external">here</a>, we need another solution for it.<br> <a id="more"></a></p>
@@ -242,17 +279,17 @@
     </summary>
     
     
-      <category term="PHP" scheme="http://januszhou.com/tags/PHP/"/>
+      <category term="PHP" scheme="http://januszhou.tech/tags/PHP/"/>
     
-      <category term="MSSQL" scheme="http://januszhou.com/tags/MSSQL/"/>
+      <category term="MSSQL" scheme="http://januszhou.tech/tags/MSSQL/"/>
     
   </entry>
   
   <entry>
     <title>Homestead Auto Add New Site</title>
-    <link href="http://januszhou.com/2016/11/15/Homestead-add-new-site/"/>
-    <id>http://januszhou.com/2016/11/15/Homestead-add-new-site/</id>
-    <published>2016-11-15T18:11:58.000Z</published>
+    <link href="http://januszhou.tech/2016/11/15/Homestead-add-new-site/"/>
+    <id>http://januszhou.tech/2016/11/15/Homestead-add-new-site/</id>
+    <published>2016-11-15T23:11:58.000Z</published>
     <updated>2017-03-11T23:13:37.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Add-New-Site-To-Homestead"><a href="#Add-New-Site-To-Homestead" class="headerlink" title="Add New Site To Homestead"></a>Add New Site To Homestead</h2><p>If you using <a href="https://laravel.com/docs/5.2/homestead" target="_blank" rel="external">Homestead</a> as your development environment, you should know how to add a new site manually. But I find it a little bit annoying that you have type same commands every time. I started search around and try to find any bash script can do same thing for me in one command, I found <a href="https://github.com/raffw7912/homestead-add-site" target="_blank" rel="external">this</a> in Github, someone has created nice bash script can do pretty much everything, but it really out-of-date, so I cloned the repo and update a little bit <a href="https://github.com/januszhou/homestead-add-site" target="_blank" rel="external">here</a></p>
@@ -266,18 +303,18 @@
     </summary>
     
     
-      <category term="Homestead" scheme="http://januszhou.com/tags/Homestead/"/>
+      <category term="Homestead" scheme="http://januszhou.tech/tags/Homestead/"/>
     
-      <category term="Bash" scheme="http://januszhou.com/tags/Bash/"/>
+      <category term="Bash" scheme="http://januszhou.tech/tags/Bash/"/>
     
   </entry>
   
   <entry>
     <title>Hexo Server Auto Restart</title>
-    <link href="http://januszhou.com/2016/10/19/auto-restart-hexo-server/"/>
-    <id>http://januszhou.com/2016/10/19/auto-restart-hexo-server/</id>
-    <published>2016-10-19T00:59:23.000Z</published>
-    <updated>2016-10-21T04:25:11.000Z</updated>
+    <link href="http://januszhou.tech/2016/10/19/auto-restart-hexo-server/"/>
+    <id>http://januszhou.tech/2016/10/19/auto-restart-hexo-server/</id>
+    <published>2016-10-19T04:59:23.000Z</published>
+    <updated>2017-04-19T22:31:31.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Introduce-Hexo-Auto-Restart"><a href="#Introduce-Hexo-Auto-Restart" class="headerlink" title="Introduce Hexo Auto Restart"></a>Introduce Hexo Auto Restart</h2><p>Hexo is a great blog platform, the article you are looking right now is written on top of Hexo. If you tired manually to <code>Ctrl + c</code> start and restart server, you probably want two console window, one runs <code>hexo server -s</code>, <code>-s</code> means only serve static html files, which located at <code>public/</code> folder, and the other one runs <code>hexo generate --watch</code>, it’s builtin command to watch file updates and auto generate new static files. Start those two commands, refresh your browser and you should see the new updates.</p>
 <h2 id="Problem-With-Watch-in-VagrantBox"><a href="#Problem-With-Watch-in-VagrantBox" class="headerlink" title="Problem With Watch in VagrantBox"></a>Problem With Watch in VagrantBox</h2><p>I personally had pretty much all developing projects running in the vagrant box, the problem of <code>hexo generate --watch</code> seems like doesn’t corporate with vagrant box, so the <a href="https://github.com/remy/nodemon" target="_blank" rel="external">Nodemon</a> comes into the game.</p>
@@ -300,27 +337,30 @@
     
     </summary>
     
+      <category term="Hexo" scheme="http://januszhou.tech/categories/Hexo/"/>
     
-      <category term="Hexo" scheme="http://januszhou.com/tags/Hexo/"/>
     
-      <category term="Nodemon" scheme="http://januszhou.com/tags/Nodemon/"/>
+      <category term="Hexo" scheme="http://januszhou.tech/tags/Hexo/"/>
+    
+      <category term="Nodemon" scheme="http://januszhou.tech/tags/Nodemon/"/>
     
   </entry>
   
   <entry>
     <title>Youtube video snapshot with play button</title>
-    <link href="http://januszhou.com/2016/10/11/youtube-snapshot-with-play-button/"/>
-    <id>http://januszhou.com/2016/10/11/youtube-snapshot-with-play-button/</id>
-    <published>2016-10-11T15:00:00.000Z</published>
-    <updated>2017-03-16T01:21:18.000Z</updated>
+    <link href="http://januszhou.tech/2016/10/11/youtube-snapshot-with-play-button/"/>
+    <id>http://januszhou.tech/2016/10/11/youtube-snapshot-with-play-button/</id>
+    <published>2016-10-11T19:00:00.000Z</published>
+    <updated>2017-04-19T22:43:22.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Why-I-created-this-tool">
     <a href="#Why-I-created-this-tool" class="headerlink" title="Why I created this tool"></a>
     Why I created this tool
 </h2>
 <p>
-    Recently, one of my clients ask me to put their newest marketing video snapshot with play button into the new email campaign. Obviously, if I'm the designer, I would just use Photoshop to
+    Recently, one of my clients ask me to put their newest marketing video snapshot with play button into the new email campaign. Obviously, if I'm the designer, I would just use Photoshop, but I'm not... So I made a tool myself.
 </p>
+
 <a id="more"></a>
 
 <div class="row">
@@ -536,22 +576,26 @@
     
       &lt;h2 id=&quot;Why-I-created-this-tool&quot;&gt;
     &lt;a href=&quot;#Why-I-created-this-tool&quot; class=&quot;headerlink&quot; title=&quot;Why I created this tool&quot;&gt;&lt;/a&gt;
-    Why I c
+    Why I created this tool
+&lt;/h2&gt;
+&lt;p&gt;
+    Recently, one of my clients ask me to put their newest marketing video snapshot with play button into the new email campaign. Obviously, if I&#39;m the designer, I would just use Photoshop, but I&#39;m not... So I made a tool myself.
+&lt;/p&gt;
     
     </summary>
     
     
-      <category term="Youtube" scheme="http://januszhou.com/tags/Youtube/"/>
+      <category term="Youtube" scheme="http://januszhou.tech/tags/Youtube/"/>
     
-      <category term="Canvas" scheme="http://januszhou.com/tags/Canvas/"/>
+      <category term="Canvas" scheme="http://januszhou.tech/tags/Canvas/"/>
     
   </entry>
   
   <entry>
     <title>Laravel Sever Setup On EC2</title>
-    <link href="http://januszhou.com/2016/10/04/larvel-server-setup/"/>
-    <id>http://januszhou.com/2016/10/04/larvel-server-setup/</id>
-    <published>2016-10-04T20:43:28.000Z</published>
+    <link href="http://januszhou.tech/2016/10/04/larvel-server-setup/"/>
+    <id>http://januszhou.tech/2016/10/04/larvel-server-setup/</id>
+    <published>2016-10-05T00:43:28.000Z</published>
     <updated>2016-10-20T20:50:33.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Laravel-Server-Setup"><a href="#Laravel-Server-Setup" class="headerlink" title="Laravel Server Setup"></a>Laravel Server Setup</h2><p>Environment setup on EC2, Linux ubuntu 14.04 + php 5.6 + mysql 5.7 + apache 2.4</p>
@@ -573,11 +617,11 @@
     </summary>
     
     
-      <category term="server-setup" scheme="http://januszhou.com/tags/server-setup/"/>
+      <category term="server-setup" scheme="http://januszhou.tech/tags/server-setup/"/>
     
-      <category term="EC2" scheme="http://januszhou.com/tags/EC2/"/>
+      <category term="EC2" scheme="http://januszhou.tech/tags/EC2/"/>
     
-      <category term="Laravel" scheme="http://januszhou.com/tags/Laravel/"/>
+      <category term="Laravel" scheme="http://januszhou.tech/tags/Laravel/"/>
     
   </entry>
   
